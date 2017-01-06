@@ -74,7 +74,7 @@ impl<D: Decorator> slog_stream::Format for Format<D> {
 
         let r_decorator = self.decorator.decorate(record);
 
-        try!(io.write_all(b"<pre>"));
+        try!(io.write_all(b"<pre style=\"margin-bottom:-0.5em\">"));
 
         try!(r_decorator.fmt_timestamp(io, &*self.fn_timestamp));
         try!(r_decorator.fmt_level(io, &|io: &mut io::Write| write!(io, " {} ", record.level().as_short_str())));

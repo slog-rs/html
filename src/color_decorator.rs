@@ -84,9 +84,9 @@ impl RecordDecorator for ColorRecordDecorator {
                f: &Fn(&mut io::Write) -> io::Result<()>)
                -> io::Result<()> {
         if self.key_bold {
-            try!(write!(io, "<strong>"));
+            try!(write!(io, "<span style=\"font-weight:bold\">"));
             try!(f(io));
-            try!(write!(io, "</strong>"));
+            try!(write!(io, "</span>"));
         } else {
             try!(f(io));
         }
@@ -97,6 +97,13 @@ impl RecordDecorator for ColorRecordDecorator {
                io: &mut io::Write,
                f: &Fn(&mut io::Write) -> io::Result<()>)
                -> io::Result<()> {
-        self.fmt_msg(io, f)
+        if self.key_bold {
+            try!(write!(io, "<span style=\"font-weight:bold;color:#55557f\">"));
+            try!(f(io));
+            try!(write!(io, "</span>"));
+        } else {
+            try!(f(io));
+        }
+        Ok(())
     }
 }
