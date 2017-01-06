@@ -1,0 +1,16 @@
+[package]
+name = "slog-html"
+version = "0.1.0"
+authors = ["Daniel Faust <hessijames@gmail.com>"]
+description = "Html formatter for slog-rs"
+keywords = ["slog", "logging", "html"]
+license = "MPL-2.0"
+documentation = "https://docs.rs/slog-html"
+homepage = "https://github.com/dfaust/slog-html"
+repository = "https://github.com/dfaust/slog-html"
+readme = "README.md"
+
+[dependencies]
+slog = { version = "1.4", features = ["max_level_trace", "release_max_level_trace"] }
+slog-stream = "1.2"
+chrono = "0.2"
