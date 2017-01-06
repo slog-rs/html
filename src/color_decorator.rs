@@ -23,12 +23,16 @@ pub struct ColorDecorator {
 impl ColorDecorator {
     /// New decorator that does color records
     pub fn new_colored() -> Self {
-        ColorDecorator { use_color: true }
+        ColorDecorator {
+            use_color: true,
+        }
     }
 
     /// New decorator that does not color records
     pub fn new_plain() -> Self {
-        ColorDecorator { use_color: true }
+        ColorDecorator {
+            use_color: false,
+        }
     }
 }
 
@@ -38,12 +42,6 @@ impl Default for ColorDecorator {
             use_color: true,
         }
     }
-}
-
-/// Particular record decorator (color) for terminal output
-pub struct ColorRecordDecorator {
-    level_color: Option<&'static str>,
-    key_bold: bool,
 }
 
 impl Decorator for ColorDecorator {
@@ -64,6 +62,13 @@ impl Decorator for ColorDecorator {
     }
 }
 
+/// Particular record decorator (color) for terminal output
+pub struct ColorRecordDecorator {
+    level_color: Option<&'static str>,
+    key_bold: bool,
+}
+
+/// Methods: fmt_msg, fmt_key, fmt_separator, fmt_value, fmt_timestamp, fmt_level
 impl RecordDecorator for ColorRecordDecorator {
     fn fmt_level(&self,
                  io: &mut io::Write,
