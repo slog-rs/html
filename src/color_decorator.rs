@@ -15,31 +15,16 @@ fn level_to_color(lvl: Level) -> &'static str {
     }
 }
 
-/// Record decorator (color) for terminal output
+/// Record decorator (color)
 pub struct ColorDecorator {
-    use_color: bool,
+    msg_bold: bool,
 }
 
 impl ColorDecorator {
     /// New decorator that does color records
-    pub fn new_colored() -> Self {
+    pub fn new(msg_bold: bool) -> Self {
         ColorDecorator {
-            use_color: true,
-        }
-    }
-
-    /// New decorator that does not color records
-    pub fn new_plain() -> Self {
-        ColorDecorator {
-            use_color: false,
-        }
-    }
-}
-
-impl Default for ColorDecorator {
-    fn default() -> Self {
-        ColorDecorator {
-            use_color: true,
+            msg_bold: msg_bold,
         }
     }
 }
@@ -48,23 +33,18 @@ impl Decorator for ColorDecorator {
     type RecordDecorator = ColorRecordDecorator;
 
     fn decorate(&self, record: &Record) -> ColorRecordDecorator {
-        if self.use_color {
-            ColorRecordDecorator {
-                level_color: Some(level_to_color(record.level())),
-                key_bold: true,
-            }
-        } else {
-            ColorRecordDecorator {
-                level_color: None,
-                key_bold: false,
-            }
+        ColorRecordDecorator {
+            level_color: level_to_color(record.level()),
+            msg_bold: self.msg_bold,
+            key_bold: true,
         }
     }
 }
 
-/// Particular record decorator (color) for terminal output
+/// Particular record decorator (color)
 pub struct ColorRecordDecorator {
-    level_color: Option<&'static str>,
+    level_color: &'static str,
+    msg_bold: bool,
     key_bold: bool,
 }
 
@@ -74,13 +54,9 @@ impl RecordDecorator for ColorRecordDecorator {
                  io: &mut io::Write,
                  f: &Fn(&mut io::Write) -> io::Result<()>)
                  -> io::Result<()> {
-        if let Some(level_color) = self.level_color {
-            try!(write!(io, "<span style=\"color:#{}\">", level_color));
-            try!(f(io));
-            try!(write!(io, "</span>"));
-        } else {
-            try!(f(io));
-        }
+        try!(write!(io, "<span style=\"color:#{}\">", self.level_color));
+        try!(f(io));
+        try!(write!(io, "</span>"));
         Ok(())
     }
 
@@ -88,7 +64,7 @@ impl RecordDecorator for ColorRecordDecorator {
                io: &mut io::Write,
                f: &Fn(&mut io::Write) -> io::Result<()>)
                -> io::Result<()> {
-        if self.key_bold {
+        if self.msg_bold {
             try!(write!(io, "<span style=\"font-weight:bold\">"));
             try!(f(io));
             try!(write!(io, "</span>"));

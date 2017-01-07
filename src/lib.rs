@@ -241,6 +241,7 @@ pub fn timestamp_utc(io: &mut io::Write) -> io::Result<()> {
 pub struct FormatBuilder {
     mode: FormatMode,
     fn_timestamp: Box<TimestampFn>,
+    msg_bold: bool,
 }
 
 impl FormatBuilder {
@@ -249,6 +250,7 @@ impl FormatBuilder {
         FormatBuilder {
             mode: FormatMode::Full,
             fn_timestamp: Box::new(timestamp_local),
+            msg_bold: true,
         }
     }
 
@@ -284,12 +286,18 @@ impl FormatBuilder {
         self
     }
 
+    /// Set message boldness (default: true)
+    pub fn msg_bold(mut self, msg_bold: bool) -> Self {
+        self.msg_bold = msg_bold;
+        self
+    }
+
     /// Build Html formatter
     pub fn build(self) -> Format<ColorDecorator> {
         Format {
             mode: self.mode,
             value_stack: Mutex::new(Vec::new()),
-            decorator: ColorDecorator::default(),
+            decorator: ColorDecorator::new(self.msg_bold),
             fn_timestamp: self.fn_timestamp,
         }
     }
