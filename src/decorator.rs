@@ -1,28 +1,20 @@
+use color_palette::ColorPalette;
+
 use std::io;
 
 use slog::Record;
-use slog::Level;
 use slog_stream::{Decorator, RecordDecorator};
-
-fn level_to_color(lvl: Level) -> &'static str {
-    match lvl {
-        Level::Critical => "ff0000",
-        Level::Error => "ff5500",
-        Level::Warning => "ffaa00",
-        Level::Info => "55aa00",
-        Level::Debug => "aaaa7f",
-        Level::Trace => "55557f",
-    }
-}
 
 /// Html decorator
 pub struct HtmlDecorator {
+    color_palette: ColorPalette,
     msg_bold: bool,
 }
 
 impl HtmlDecorator {
-    pub fn new(msg_bold: bool) -> Self {
+    pub fn new(color_palette: ColorPalette, msg_bold: bool) -> Self {
         HtmlDecorator {
+            color_palette: color_palette,
             msg_bold: msg_bold,
         }
     }
@@ -33,7 +25,7 @@ impl Decorator for HtmlDecorator {
 
     fn decorate(&self, record: &Record) -> HtmlRecordDecorator {
         HtmlRecordDecorator {
-            level_color: level_to_color(record.level()),
+            level_color: self.color_palette.level_to_color(record.level()),
             msg_bold: self.msg_bold,
             key_bold: true,
         }

@@ -39,6 +39,7 @@ extern crate chrono;
 
 mod decorator;
 mod serializer;
+mod color_palette;
 
 use std::io;
 use std::sync::Mutex;
@@ -49,6 +50,7 @@ use slog_stream::{Decorator, RecordDecorator};
 
 use decorator::HtmlDecorator;
 use serializer::Serializer;
+pub use color_palette::ColorPalette;
 
 /// Formatting mode
 pub enum FormatMode {
@@ -240,6 +242,7 @@ pub fn timestamp_utc(io: &mut io::Write) -> io::Result<()> {
 /// Streamer builder
 pub struct FormatBuilder {
     mode: FormatMode,
+    color_palette: ColorPalette,
     fn_timestamp: Box<TimestampFn>,
     msg_bold: bool,
 }
@@ -249,6 +252,7 @@ impl FormatBuilder {
     fn new() -> Self {
         FormatBuilder {
             mode: FormatMode::Full,
+            color_palette: ColorPalette::default(),
             fn_timestamp: Box::new(timestamp_local),
             msg_bold: true,
         }
@@ -263,6 +267,12 @@ impl FormatBuilder {
     /// Output using compact mode
     pub fn compact(mut self) -> Self {
         self.mode = FormatMode::Compact;
+        self
+    }
+
+    /// Use custom color palette
+    pub fn color_palette(mut self, color_palette: ColorPalette) -> Self {
+        self.color_palette = color_palette;
         self
     }
 
@@ -297,7 +307,7 @@ impl FormatBuilder {
         Format {
             mode: self.mode,
             value_stack: Mutex::new(Vec::new()),
-            decorator: HtmlDecorator::new(self.msg_bold),
+            decorator: HtmlDecorator::new(self.color_palette, self.msg_bold),
             fn_timestamp: self.fn_timestamp,
         }
     }
