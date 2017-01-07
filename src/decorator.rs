@@ -15,25 +15,24 @@ fn level_to_color(lvl: Level) -> &'static str {
     }
 }
 
-/// Record decorator (color)
-pub struct ColorDecorator {
+/// Html decorator
+pub struct HtmlDecorator {
     msg_bold: bool,
 }
 
-impl ColorDecorator {
-    /// New decorator that does color records
+impl HtmlDecorator {
     pub fn new(msg_bold: bool) -> Self {
-        ColorDecorator {
+        HtmlDecorator {
             msg_bold: msg_bold,
         }
     }
 }
 
-impl Decorator for ColorDecorator {
-    type RecordDecorator = ColorRecordDecorator;
+impl Decorator for HtmlDecorator {
+    type RecordDecorator = HtmlRecordDecorator;
 
-    fn decorate(&self, record: &Record) -> ColorRecordDecorator {
-        ColorRecordDecorator {
+    fn decorate(&self, record: &Record) -> HtmlRecordDecorator {
+        HtmlRecordDecorator {
             level_color: level_to_color(record.level()),
             msg_bold: self.msg_bold,
             key_bold: true,
@@ -41,15 +40,15 @@ impl Decorator for ColorDecorator {
     }
 }
 
-/// Particular record decorator (color)
-pub struct ColorRecordDecorator {
+/// Decorator for a particular record
+pub struct HtmlRecordDecorator {
     level_color: &'static str,
     msg_bold: bool,
     key_bold: bool,
 }
 
 /// Methods: fmt_msg, fmt_key, fmt_separator, fmt_value, fmt_timestamp, fmt_level
-impl RecordDecorator for ColorRecordDecorator {
+impl RecordDecorator for HtmlRecordDecorator {
     fn fmt_level(&self,
                  io: &mut io::Write,
                  f: &Fn(&mut io::Write) -> io::Result<()>)

@@ -37,7 +37,7 @@ extern crate slog;
 extern crate slog_stream;
 extern crate chrono;
 
-mod color_decorator;
+mod decorator;
 mod serializer;
 
 use std::io;
@@ -47,7 +47,7 @@ use slog::Record;
 use slog::OwnedKeyValueList;
 use slog_stream::{Decorator, RecordDecorator};
 
-use color_decorator::ColorDecorator;
+use decorator::HtmlDecorator;
 use serializer::Serializer;
 
 /// Formatting mode
@@ -293,11 +293,11 @@ impl FormatBuilder {
     }
 
     /// Build Html formatter
-    pub fn build(self) -> Format<ColorDecorator> {
+    pub fn build(self) -> Format<HtmlDecorator> {
         Format {
             mode: self.mode,
             value_stack: Mutex::new(Vec::new()),
-            decorator: ColorDecorator::new(self.msg_bold),
+            decorator: HtmlDecorator::new(self.msg_bold),
             fn_timestamp: self.fn_timestamp,
         }
     }
@@ -315,6 +315,6 @@ pub fn new() -> FormatBuilder {
 }
 
 /// Default html `Format`
-pub fn default() -> Format<ColorDecorator> {
+pub fn default() -> Format<HtmlDecorator> {
     FormatBuilder::new().build()
 }
