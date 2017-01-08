@@ -37,7 +37,7 @@ impl ColorPalette {
 }
 
 impl Default for ColorPalette {
-    /// ```
+    /// ```text
     /// critical: "ff0000"
     /// error: "ff5500"
     /// warning: "ffaa00"
