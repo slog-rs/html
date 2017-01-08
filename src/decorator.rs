@@ -42,13 +42,19 @@ fn fmt(io: &mut io::Write,
        f: &Fn(&mut io::Write) -> io::Result<()>,
        style: &Style)
        -> io::Result<()> {
-    if style.color.is_some() || style.bold {
+    if style.color.is_some() || style.bold || style.italic || style.custom.is_some() {
         try!(write!(io, "<span style=\""));
         if let Some(color) = style.color {
             try!(write!(io, "color:#{};", color));
         }
         if style.bold {
             try!(write!(io, "font-weight:bold;"));
+        }
+        if style.italic {
+            try!(write!(io, "font-style:italic;"));
+        }
+        if let Some(custom) = style.custom {
+            try!(write!(io, "{}", custom));
         }
         try!(write!(io, "\">"));
         try!(f(io));
@@ -64,7 +70,22 @@ impl RecordDecorator for HtmlRecordDecorator {
                  io: &mut io::Write,
                  f: &Fn(&mut io::Write) -> io::Result<()>)
                  -> io::Result<()> {
-        try!(write!(io, "<span style=\"color:#{}\">", self.level_color));
+        try!(write!(io, "<span style=\""));
+        if let Some(color) = self.style.level.color {
+            try!(write!(io, "color:#{};", color));
+        } else {
+            try!(write!(io, "color:#{};", self.level_color));
+        }
+        if self.style.level.bold {
+            try!(write!(io, "font-weight:bold;"));
+        }
+        if self.style.level.italic {
+            try!(write!(io, "font-style:italic;"));
+        }
+        if let Some(custom) = self.style.level.custom {
+            try!(write!(io, "{}", custom));
+        }
+        try!(write!(io, "\">"));
         try!(f(io));
         try!(write!(io, "</span>"));
         Ok(())

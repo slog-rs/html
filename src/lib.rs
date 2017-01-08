@@ -279,6 +279,12 @@ impl FormatBuilder {
         self
     }
 
+    /// Use custom style for the log level
+    pub fn level_style(mut self, style: Style) -> Self {
+        self.style.level = style;
+        self
+    }
+
     /// Use custom style for the timestamp
     pub fn timestamp_style(mut self, style: Style) -> Self {
         self.style.timestamp = style;
