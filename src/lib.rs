@@ -63,14 +63,6 @@ pub enum FormatMode {
     Full,
 }
 
-pub enum Element {
-    Timestamp,
-    Message,
-    Key,
-    Value,
-    Separator,
-}
-
 /// Html formatter
 pub struct Format<D: Decorator> {
     mode: FormatMode,
@@ -287,16 +279,33 @@ impl FormatBuilder {
         self
     }
 
-    /// Use custom style for specified element
-    pub fn style(mut self, element: Element, style: Style) -> Self {
-        use Element::*;
-        match element {
-            Timestamp => self.style.timestamp = style,
-            Message => self.style.message = style,
-            Key => self.style.key = style,
-            Value => self.style.value = style,
-            Separator => self.style.separator = style,
-        }
+    /// Use custom style for the timestamp
+    pub fn timestamp_style(mut self, style: Style) -> Self {
+        self.style.timestamp = style;
+        self
+    }
+
+    /// Use custom style for the message
+    pub fn message_style(mut self, style: Style) -> Self {
+        self.style.message = style;
+        self
+    }
+
+    /// Use custom style for keys
+    pub fn key_style(mut self, style: Style) -> Self {
+        self.style.key = style;
+        self
+    }
+
+    /// Use custom style for values
+    pub fn value_style(mut self, style: Style) -> Self {
+        self.style.value = style;
+        self
+    }
+
+    /// Use custom style for separators
+    pub fn separator_style(mut self, style: Style) -> Self {
+        self.style.separator = style;
         self
     }
 
