@@ -1,4 +1,5 @@
 use color_palette::ColorPalette;
+use style::{Style, StyleTable};
 
 use std::io;
 
@@ -8,14 +9,14 @@ use slog_stream::{Decorator, RecordDecorator};
 /// Html decorator
 pub struct HtmlDecorator {
     color_palette: ColorPalette,
-    msg_bold: bool,
+    style: StyleTable,
 }
 
 impl HtmlDecorator {
-    pub fn new(color_palette: ColorPalette, msg_bold: bool) -> Self {
+    pub fn new(color_palette: ColorPalette, style: StyleTable) -> Self {
         HtmlDecorator {
             color_palette: color_palette,
-            msg_bold: msg_bold,
+            style: style,
         }
     }
 }
@@ -26,8 +27,7 @@ impl Decorator for HtmlDecorator {
     fn decorate(&self, record: &Record) -> HtmlRecordDecorator {
         HtmlRecordDecorator {
             level_color: self.color_palette.level_to_color(record.level()),
-            msg_bold: self.msg_bold,
-            key_bold: true,
+            style: self.style,
         }
     }
 }
@@ -35,11 +35,30 @@ impl Decorator for HtmlDecorator {
 /// Decorator for a particular record
 pub struct HtmlRecordDecorator {
     level_color: &'static str,
-    msg_bold: bool,
-    key_bold: bool,
+    style: StyleTable,
 }
 
-/// Methods: fmt_msg, fmt_key, fmt_separator, fmt_value, fmt_timestamp, fmt_level
+fn fmt(io: &mut io::Write,
+       f: &Fn(&mut io::Write) -> io::Result<()>,
+       style: &Style)
+       -> io::Result<()> {
+    if style.color.is_some() || style.bold {
+        try!(write!(io, "<span style=\""));
+        if let Some(color) = style.color {
+            try!(write!(io, "color:#{};", color));
+        }
+        if style.bold {
+            try!(write!(io, "font-weight:bold;"));
+        }
+        try!(write!(io, "\">"));
+        try!(f(io));
+        try!(write!(io, "</span>"));
+    } else {
+        try!(f(io));
+    }
+    Ok(())
+}
+
 impl RecordDecorator for HtmlRecordDecorator {
     fn fmt_level(&self,
                  io: &mut io::Write,
@@ -55,27 +74,34 @@ impl RecordDecorator for HtmlRecordDecorator {
                io: &mut io::Write,
                f: &Fn(&mut io::Write) -> io::Result<()>)
                -> io::Result<()> {
-        if self.msg_bold {
-            try!(write!(io, "<span style=\"font-weight:bold\">"));
-            try!(f(io));
-            try!(write!(io, "</span>"));
-        } else {
-            try!(f(io));
-        }
-        Ok(())
+        fmt(io, f, &self.style.message)
     }
 
     fn fmt_key(&self,
                io: &mut io::Write,
                f: &Fn(&mut io::Write) -> io::Result<()>)
                -> io::Result<()> {
-        if self.key_bold {
-            try!(write!(io, "<span style=\"font-weight:bold;color:#55557f\">"));
-            try!(f(io));
-            try!(write!(io, "</span>"));
-        } else {
-            try!(f(io));
-        }
-        Ok(())
+        fmt(io, f, &self.style.key)
+    }
+
+    fn fmt_separator(&self,
+               io: &mut io::Write,
+               f: &Fn(&mut io::Write) -> io::Result<()>)
+               -> io::Result<()> {
+        fmt(io, f, &self.style.separator)
+    }
+
+    fn fmt_value(&self,
+               io: &mut io::Write,
+               f: &Fn(&mut io::Write) -> io::Result<()>)
+               -> io::Result<()> {
+        fmt(io, f, &self.style.value)
+    }
+
+    fn fmt_timestamp(&self,
+               io: &mut io::Write,
+               f: &Fn(&mut io::Write) -> io::Result<()>)
+               -> io::Result<()> {
+        fmt(io, f, &self.style.timestamp)
     }
 }

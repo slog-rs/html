@@ -40,6 +40,7 @@ extern crate chrono;
 mod decorator;
 mod serializer;
 mod color_palette;
+mod style;
 
 use std::io;
 use std::sync::Mutex;
@@ -50,6 +51,8 @@ use slog_stream::{Decorator, RecordDecorator};
 
 use decorator::HtmlDecorator;
 use serializer::Serializer;
+use style::StyleTable;
+pub use style::Style;
 pub use color_palette::ColorPalette;
 
 /// Formatting mode
@@ -58,6 +61,14 @@ pub enum FormatMode {
     Compact,
     /// Full logging format
     Full,
+}
+
+pub enum Element {
+    Timestamp,
+    Message,
+    Key,
+    Value,
+    Separator,
 }
 
 /// Html formatter
@@ -243,8 +254,8 @@ pub fn timestamp_utc(io: &mut io::Write) -> io::Result<()> {
 pub struct FormatBuilder {
     mode: FormatMode,
     color_palette: ColorPalette,
+    style: StyleTable,
     fn_timestamp: Box<TimestampFn>,
-    msg_bold: bool,
 }
 
 impl FormatBuilder {
@@ -253,8 +264,8 @@ impl FormatBuilder {
         FormatBuilder {
             mode: FormatMode::Full,
             color_palette: ColorPalette::default(),
+            style: StyleTable::default(),
             fn_timestamp: Box::new(timestamp_local),
-            msg_bold: true,
         }
     }
 
@@ -273,6 +284,19 @@ impl FormatBuilder {
     /// Use custom color palette
     pub fn color_palette(mut self, color_palette: ColorPalette) -> Self {
         self.color_palette = color_palette;
+        self
+    }
+
+    /// Use custom style for specified element
+    pub fn style(mut self, element: Element, style: Style) -> Self {
+        use Element::*;
+        match element {
+            Timestamp => self.style.timestamp = style,
+            Message => self.style.message = style,
+            Key => self.style.key = style,
+            Value => self.style.value = style,
+            Separator => self.style.separator = style,
+        }
         self
     }
 
@@ -296,18 +320,12 @@ impl FormatBuilder {
         self
     }
 
-    /// Set message boldness (default: true)
-    pub fn msg_bold(mut self, msg_bold: bool) -> Self {
-        self.msg_bold = msg_bold;
-        self
-    }
-
     /// Build Html formatter
     pub fn build(self) -> Format<HtmlDecorator> {
         Format {
             mode: self.mode,
             value_stack: Mutex::new(Vec::new()),
-            decorator: HtmlDecorator::new(self.color_palette, self.msg_bold),
+            decorator: HtmlDecorator::new(self.color_palette, self.style),
             fn_timestamp: self.fn_timestamp,
         }
     }
