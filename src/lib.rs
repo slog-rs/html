@@ -1,6 +1,8 @@
 //! Html formatter for `slog-rs`
 //!
-//! # Example
+//! # Examples
+//!
+//! Writing logs to an HTML file
 //!
 //! ```
 //! #[macro_use]
@@ -29,6 +31,53 @@
 //!
 //!     debug!(log, "debug values"; "x" => 1, "y" => -1);
 //! }
+//! ```
+//!
+//! Create HTML logger with custom options
+//!
+//! Use a greyscale color palette for the log levels and disable boldness for the message part.
+//!
+//! ```
+//! # #[macro_use]
+//! # extern crate slog;
+//! # extern crate slog_html;
+//! # extern crate slog_stream;
+//! #
+//! # use slog::DrainExt;
+//! #
+//! # use std::fs::OpenOptions;
+//! #
+//! # fn main() {
+//! #     let file = OpenOptions::new()
+//! #         .create(true)
+//! #         .write(true)
+//! #         .truncate(true)
+//! #         .open("target/log.html").unwrap();
+//! #
+//! #     let log = slog::Logger::root(
+//! #         slog_stream::stream(
+//! #             file,
+//!             slog_html::new()
+//!                 .compact()
+//!                 .color_palette(slog_html::ColorPalette {
+//!                     critical: "000000",
+//!                     error: "1e1e1e",
+//!                     warning: "3c3c3c",
+//!                     info: "5a5a5a",
+//!                     debug: "787878",
+//!                     trace: "969696",
+//!                 })
+//!                 .message_style(slog_html::Style {
+//!                     bold: false,
+//!                     .. slog_html::Style::default()
+//!                 })
+//!                 .build()
+//! #         ).fuse(),
+//! #         o!("version" => env!("CARGO_PKG_VERSION"))
+//! #     );
+//! #
+//! #     debug!(log, "debug values"; "x" => 1, "y" => -1);
+//! # }
 //! ```
 #![warn(missing_docs)]
 
