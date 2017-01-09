@@ -186,7 +186,7 @@ impl<D: Decorator> Format<D> {
                 try!(io.write_all(b"</pre>\n"));
             }
         }
-        if changed {
+        if changed || value_stack.len() != record_value_stack.len() {
             *value_stack = record_value_stack;
         }
 
