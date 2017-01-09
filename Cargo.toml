@@ -1,6 +1,6 @@
 [package]
 name = "slog-html"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Daniel Faust <hessijames@gmail.com>"]
 description = "Html formatter for slog-rs"
 keywords = ["slog", "logging", "html"]
