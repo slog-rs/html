@@ -42,8 +42,8 @@ impl Default for ColorPalette {
     /// error: "ff5500"
     /// warning: "ffaa00"
     /// info: "55aa00"
-    /// debug: "aaaa7f"
-    /// trace: "55557f"
+    /// debug: "55557f"
+    /// trace: "aaaa7f"
     /// ```
     fn default() -> Self {
         ColorPalette {
@@ -51,8 +51,8 @@ impl Default for ColorPalette {
             error: "ff5500",
             warning: "ffaa00",
             info: "55aa00",
-            debug: "aaaa7f",
-            trace: "55557f",
+            debug: "55557f",
+            trace: "aaaa7f",
         }
     }
 }
