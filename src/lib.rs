@@ -243,7 +243,7 @@ impl<D: Decorator> Format<D> {
             Vec::new()
         };
 
-        if let &Some(ref parent) = logger_values_ref.parent() {
+        if let Some(ref parent) = *logger_values_ref.parent() {
             let mut value = try!(self.record_value_stack(record, parent));
             value_stack.append(&mut value);
         }
