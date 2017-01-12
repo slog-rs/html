@@ -24,12 +24,12 @@
 
 Rendered example output:
 
-<img src="https://i.imgur.com/3cK7jhh.png" width="601" height="130" alt="slog-rs html full-format output">
+<img src="https://i.imgur.com/7xyv5Sg.png" width="601" height="130" alt="slog-rs html full-format output">
 
 Compact mode:
 
-<img src="https://i.imgur.com/Jr33aAS.png" width="434" height="349" alt="slog-rs html compact output">
+<img src="https://i.imgur.com/Ur6g8Q4.png" width="434" height="349" alt="slog-rs html compact output">
 
 Full mode:
 
-<img src="https://i.imgur.com/43RvpfU.png" width="960" height="230" alt="slog-rs html full output">
+<img src="https://i.imgur.com/mVvzYCN.png" width="960" height="230" alt="slog-rs html full output">
