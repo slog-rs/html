@@ -142,7 +142,7 @@ impl<D: Decorator> Format<D> {
         try!(io.write_all(b"<pre style=\"margin-bottom:-0.5em\">"));
 
         try!(r_decorator.fmt_timestamp(io, &*self.fn_timestamp));
-        try!(r_decorator.fmt_level(io, &|io: &mut io::Write| write!(io, " {} ", record.level().as_short_str())));
+        try!(r_decorator.fmt_level(io, &|io| write!(io, " {} ", record.level().as_short_str())));
         try!(r_decorator.fmt_msg(io, &|io| write!(io, "{}", record.msg())));
 
         let mut serializer = Serializer::new(io, r_decorator);
@@ -196,7 +196,7 @@ impl<D: Decorator> Format<D> {
 
         try!(self.print_indent(io, indent));
         try!(r_decorator.fmt_timestamp(io, &*self.fn_timestamp));
-        try!(r_decorator.fmt_level(io, &|io: &mut io::Write| write!(io, " {} ", record.level().as_short_str())));
+        try!(r_decorator.fmt_level(io, &|io| write!(io, " {} ", record.level().as_short_str())));
         try!(r_decorator.fmt_msg(io, &|io| write!(io, "{}", record.msg())));
 
         let mut serializer = Serializer::new(io, r_decorator);
