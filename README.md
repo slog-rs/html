@@ -4,12 +4,16 @@
   </a>
   <br>
 
-  <a href="https://travis-ci.org/dfaust/slog-html">
-      <img src="https://img.shields.io/travis/dfaust/slog-html/master.svg" alt="Travis CI Build Status">
+  <a href="https://travis-ci.org/slog-rs/html">
+      <img src="https://img.shields.io/travis/slog-rs/html/master.svg" alt="Travis CI Build Status">
   </a>
 
   <a href="https://crates.io/crates/slog-html">
       <img src="https://img.shields.io/crates/d/slog-html.svg" alt="slog-html on crates.io">
+  </a>
+
+  <a href="https://gitter.im/slog-rs/slog">
+      <img src="https://img.shields.io/gitter/room/slog-rs/slog.svg" alt="slog-rs Gitter Chat">
   </a>
 
   <a href="https://docs.rs/slog-html">

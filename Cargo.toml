@@ -1,13 +1,13 @@
 [package]
 name = "slog-html"
-version = "0.1.2"
+version = "0.1.3"
 authors = ["Daniel Faust <hessijames@gmail.com>"]
 description = "Html formatter for slog-rs"
-keywords = ["slog", "logging", "html"]
+keywords = ["slog", "logging", "log", "html"]
 license = "MPL-2.0"
 documentation = "https://docs.rs/slog-html"
-homepage = "https://github.com/dfaust/slog-html"
-repository = "https://github.com/dfaust/slog-html"
+homepage = "https://github.com/slog-rs/slog"
+repository = "https://github.com/slog-rs/html"
 readme = "README.md"
 
 [dependencies]
