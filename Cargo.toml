@@ -10,6 +10,10 @@ homepage = "https://github.com/slog-rs/slog"
 repository = "https://github.com/slog-rs/html"
 readme = "README.md"
 
+[badges]
+travis-ci = { repository = "slog-rs/html" }
+appveyor = { repository = "slog-rs/html" }
+
 [dependencies]
 slog = { version = "1.4", features = ["max_level_trace", "release_max_level_trace"] }
 slog-stream = "1.2"
